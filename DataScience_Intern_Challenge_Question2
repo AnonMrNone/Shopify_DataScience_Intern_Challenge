@@ -1,0 +1,40 @@
+
+Question 2: For this question you’ll need to use SQL. Follow this link to access the data set required for the challenge. Please use queries to answer the following questions. Paste your queries along with your final numerical answers below.
+
+a. How many orders were shipped by Speedy Express in total?
+
+create view orders_by_shipper as
+select Orders.OrderID, Orders.ShipperID, Shippers.ShipperName
+from Orders join Shippers on Shippers.ShipperID=Orders.ShipperID;
+
+SELECT count(*) FROM [orders_by_shipper] where ShipperName = "Speedy Express”;
+
+Answer: 54
+
+b. What is the last name of the employee with the most orders?
+
+create view employee_orders as
+select Orders.EmployeeID, Employees.LastName
+from Orders join Employees on Employees.EmployeeID=Orders.EmployeeID;
+
+SELECT LastName, count(*) FROM [employee_orders] group by LastName order by count(*) desc;
+
+Answer: Peacock 40
+
+c. What product was ordered the most by customers in Germany?
+
+CREATE VIEW Products_Ordered AS SELECT Orders.OrderID, Customers.Country, OrderDetails.Quantity, Products.ProductName FROM Orders, OrderDetails JOIN Customers ON Orders.CustomerID=Customers.CustomerID JOIN Products ON OrderDetails.ProductID=Products.ProductID WHERE Country='Germany';
+
+SELECT ProductName, (count(*) * Quantity) FROM [products_ordered_germany] group by ProductName order by (count(*) * Quantity)  desc;
+
+Answer: Nord-Ost Matjeshering 12000
+        Camembert Pierrot 12000
+        
+(or)
+
+CREATE VIEW Products_Ordered AS SELECT Orders.OrderID, Customers.Country, OrderDetails.Quantity, Products.ProductName FROM Orders, OrderDetails JOIN Customers ON Orders.CustomerID=Customers.CustomerID JOIN Products ON OrderDetails.ProductID=Products.ProductID WHERE Country='Germany';
+
+SELECT ProductName, (count(*) * Quantity) FROM [products_ordered_germany] group by ProductName order by (count(*) * Quantity)  desc limit 1;
+
+Answer: Nord-Ost Matjeshering 12000
+
